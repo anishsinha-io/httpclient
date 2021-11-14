@@ -3,9 +3,11 @@ package httpc
 import "net/http"
 
 type httpClient struct {
+	Headers http.Header
 }
 
 type HttpClient interface {
+	SetHeaders(headers http.Header)
 	Get(url string, headers http.Header) (*http.Response, error)
 	Post(url string, headers http.Header, body interface{}) (*http.Response, error)
 	Put(url string, headers http.Header, body interface{}) (*http.Response, error)
@@ -16,6 +18,10 @@ type HttpClient interface {
 func CreateClient() HttpClient {
 	client := &httpClient{}
 	return client
+}
+
+func (c *httpClient) SetHeaders(headers http.Header) {
+	c.Headers = headers
 }
 
 func (c *httpClient) Get(url string, headers http.Header) (*http.Response, error) {

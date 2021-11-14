@@ -3,13 +3,30 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 
 	"github.com/anish-sinha1/httpclient/httpc"
 )
 
-func main() {
+func createClient() httpc.HttpClient {
 	client := httpc.CreateClient()
-	res, err := client.Get("https://api.github.com", nil)
+	commonHeaders := make(http.Header)
+	commonHeaders.Set("Authorization", "Bearer <token>")
+	client.SetHeaders(commonHeaders)
+	return client
+}
+
+var githubHttpClient = createClient()
+
+type User struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+func main() {
+	headers := make(http.Header)
+	headers.Set("Authorization", "Bearer <token>")
+	res, err := githubHttpClient.Get("https://api.github.com", nil)
 	if err != nil {
 		panic(err)
 	}
